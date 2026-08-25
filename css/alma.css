@@ -378,6 +378,9 @@ footer .reserva { font-size:.8rem; color:#9086B0; margin:1.6rem auto 0;
   overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 
 /* el marco pasa a ser un reproductor */
+/* la portada arranca pegada al borde: sin franja sobre la foto */
+.portada { padding-top:0; }
+
 .marco { aspect-ratio:16/9; }
 .marco img { width:100%; height:100%; object-fit:cover; }
 .marco iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
@@ -393,6 +396,18 @@ footer .reserva { font-size:.8rem; color:#9086B0; margin:1.6rem auto 0;
 .marco.cargado .jugar, .marco.cargado img { display:none; }
 .maestroMarco { aspect-ratio:16/9; width:min(100%,26rem); }
 @media (min-width:52rem) { .maestro { grid-template-columns:26rem 1fr; } }
+
+/* botón ovalado, igual al de "Volver" del atlas */
+.pildora { display:inline-flex; align-items:center; gap:.7rem; text-decoration:none;
+  border:1px solid var(--linea); border-radius:999px; padding:.85rem 1.7rem;
+  background:var(--velo); color:var(--ambar); margin-top:1.2rem;
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+  transition:border-color .3s ease, background .3s ease, transform .3s ease; }
+.pildora::after { content:"→"; font-size:1rem; letter-spacing:0;
+  transition:transform .3s ease; }
+.pildora:hover, .pildora:focus-visible { border-color:rgba(240,216,154,.6);
+  background:#2C2054; transform:translateY(-2px); }
+.pildora:hover::after { transform:translateX(4px); }
 
 /* ── el muro de la cosecha ────────────────────────────── */
 .muro { display:grid; gap:1.6rem; margin-top:clamp(2.2rem,6vh,3rem); }
