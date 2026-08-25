@@ -10,13 +10,13 @@ que se reparte en la sala.
 | Archivo | Qué es |
 |---|---|
 | `index.html` | La página principal: los cinco videos, la música, los 14 poderes, las cuatro preguntas, la práctica, el muro de la cosecha, los libros |
-| `atlas.html` | Las 22 láminas agrupadas en cinco constelaciones, con visor para ampliarlas |
+| `atlas.html` | Las 20 láminas agrupadas en cinco constelaciones, con visor para ampliarlas |
 | `gracias.html` | Lo que ve alguien después de mandar su cosecha |
 | `css/alma.css` | Todos los estilos |
 | `js/alma.js` | El cielo estrellado, los videos y el muro |
 | `js/visor.js` | El visor de láminas del atlas |
 | `img/` | Fotos, logo y pósters |
-| `img/lam/` | Las 22 láminas en tamaño completo |
+| `img/lam/` | Las láminas en tamaño completo |
 | `img/mini/` | Las mismas, chiquitas, para las tarjetas |
 
 ## Cómo cambiar un texto
