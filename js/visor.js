@@ -53,10 +53,12 @@
     img.onload = function () { medir(); reiniciar(); };
   }
 
+  var conHistoria = false;
   function abrir(i, grupo) {
     orden = grupo;
     visor.classList.add('abierto');
     document.body.style.overflow = 'hidden';
+    try { history.pushState({ visor: true }, ''); conHistoria = true; } catch (e) {}
     mostrar(i);
     pista.textContent = ('ontouchstart' in window)
       ? 'Pellizcá para acercar · dos toques para ampliar de golpe'
@@ -64,11 +66,15 @@
     pista.classList.remove('ida');
     setTimeout(function () { pista.classList.add('ida'); }, 2800);
   }
-  function cerrar() {
+  function cerrar(porHistoria) {
+    if (!visor.classList.contains('abierto')) return;
     visor.classList.remove('abierto');
     document.body.style.overflow = '';
     img.src = '';
+    if (conHistoria && !porHistoria) { conHistoria = false; try { history.back(); } catch (e) {} }
+    conHistoria = false;
   }
+  window.addEventListener('popstate', function () { cerrar(true); });
   function saltar(d) {
     var p = orden.indexOf(actual) + d;
     if (p >= 0 && p < orden.length) mostrar(orden[p]);
@@ -78,7 +84,7 @@
   document.querySelectorAll('[data-i]').forEach(function (b) {
     b.addEventListener('click', function () {
       var i = +b.dataset.i;
-      var cons = b.closest('.cons');
+      var cons = b.closest('.grupo');
       var grupo = cons
         ? Array.prototype.map.call(
             cons.querySelectorAll('.lam:not(.oculta)'), function (x) { return +x.dataset.i; })
@@ -163,7 +169,7 @@
     borrar.style.display = t ? 'block' : 'none';
     if (!t) {
       lams.forEach(function (l) { l.classList.remove('oculta'); });
-      document.querySelectorAll('.cons').forEach(function (c) { c.classList.remove('oculta'); });
+      document.querySelectorAll('.grupo').forEach(function (c) { c.classList.remove('oculta'); });
       cuenta.textContent = '';
       return;
     }
@@ -172,7 +178,7 @@
       var hay = normal(l.dataset.buscar).indexOf(t) >= 0;
       l.classList.toggle('oculta', !hay); if (hay) n++;
     });
-    document.querySelectorAll('.cons').forEach(function (c) {
+    document.querySelectorAll('.grupo').forEach(function (c) {
       c.classList.toggle('oculta', c.querySelectorAll('.lam:not(.oculta)').length === 0);
     });
     cuenta.textContent = n === 0 ? 'Ninguna lámina con esa palabra'
@@ -183,4 +189,55 @@
   document.querySelectorAll('.pistas button').forEach(function (b) {
     b.addEventListener('click', function () { q.value = b.dataset.p; filtrar(); });
   });
+
+
+  // arrastrar hacia abajo cierra, como en cualquier galería de teléfono
+  var y0 = null, arrastreCierre = false;
+  lienzo.addEventListener('pointerdown', function (e) {
+    if (punt.size === 1 && esc <= 1.02) { y0 = e.clientY; arrastreCierre = false; }
+  });
+  lienzo.addEventListener('pointermove', function (e) {
+    if (y0 === null || punt.size !== 1 || esc > 1.02) return;
+    var d = e.clientY - y0;
+    if (d > 12) {
+      arrastreCierre = true;
+      visor.style.transform = 'translateY(' + Math.min(d, 260) + 'px)';
+      visor.style.opacity = String(Math.max(0.35, 1 - d / 420));
+    }
+  });
+  function soltarCierre(e) {
+    if (y0 === null) { return; }
+    var d = e.clientY - y0;
+    y0 = null;
+    visor.style.transition = 'transform .25s ease, opacity .25s ease';
+    if (arrastreCierre && d > 110) {
+      visor.style.transform = 'translateY(100%)';
+      visor.style.opacity = '0';
+      setTimeout(function () {
+        cerrar();
+        visor.style.transition = ''; visor.style.transform = ''; visor.style.opacity = '';
+      }, 240);
+    } else {
+      visor.style.transform = ''; visor.style.opacity = '';
+      setTimeout(function () { visor.style.transition = ''; }, 260);
+    }
+    arrastreCierre = false;
+  }
+  lienzo.addEventListener('pointerup', soltarCierre);
+  lienzo.addEventListener('pointercancel', soltarCierre);
+
+})();
+
+/* la barra de volver aparece apenas se deja atrás la cabecera */
+(function () {
+  var b = document.getElementById('barra');
+  if (!b) return;
+  var cab = document.querySelector('header');
+  function mirar() {
+    var limite = cab ? cab.offsetHeight - 90 : 240;
+    b.classList.toggle('aqui', window.scrollY > limite);
+  }
+  mirar();
+  window.addEventListener('scroll', mirar, { passive: true });
+  window.addEventListener('resize', mirar);
 })();

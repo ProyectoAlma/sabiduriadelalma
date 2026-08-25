@@ -55,6 +55,11 @@ seguimiento hasta que alguien le da play.
 Si algún día cambiás un video, reemplazá el id en `index.html`
 (está en `data-yt="…"`).
 
+**Importante:** cada video tiene que tener activada la casilla
+**"Permitir inserción"** en YouTube Studio (el video → *Mostrar más* →
+*Licencia y distribución*). Si está desactivada, el reproductor de la
+página muestra "Ver en YouTube" en vez de reproducir.
+
 ## Nota
 
 `<meta name="robots" content="noindex,nofollow">` está puesto a propósito:
