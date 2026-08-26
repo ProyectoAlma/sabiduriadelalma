@@ -3,6 +3,12 @@
   publish = "."
   command = ""
 
+# El programa vive aparte: sólo se llega por su propio QR.
+[[redirects]]
+  from = "/programa"
+  to = "/programa.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
